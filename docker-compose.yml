@@ -1,0 +1,25 @@
+services:
+  mysql:
+    container_name: database-semaphore
+    hostname: mysql
+    image: mysql:8.0
+    ports:
+      - 3300:3306
+    volumes:
+      - ./data/databases:/var/lib/mysql
+    env_file:
+      - .env
+    restart: unless-stopped
+  semaphore:
+    container_name: app-semaphore
+    image: semaphoreui/semaphore:v2.9.45
+    ports:
+      - 1000:3000
+    volumes:
+      - ./data/downloads:/tmp/downloads
+      - ./scripts:/scripts
+    env_file:
+      - .env
+    depends_on:
+      - mysql
+    restart: unless-stopped
